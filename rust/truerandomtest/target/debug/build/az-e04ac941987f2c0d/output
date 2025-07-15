@@ -1,0 +1,6 @@
+$ mkdir -p "/home/troy/Documents/low-level/rust/truerandomtest/target/debug/build/az-e04ac941987f2c0d/out/try_track_caller"
+$ cd "/home/troy/Documents/low-level/rust/truerandomtest/target/debug/build/az-e04ac941987f2c0d/out/try_track_caller"
+$ printf '%s' "// try_tra"... > "/home/troy/Documents/low-level/rust/truerandomtest/target/debug/build/az-e04ac941987f2c0d/out/try_track_caller/try_track_caller.rs"
+$ cd "/home/troy/Documents/low-level/rust/truerandomtest/target/debug/build/az-e04ac941987f2c0d/out/try_track_caller" && "rustc" "try_track_caller.rs" "--emit=dep-info,metadata" >& /dev/null
+cargo:rustc-cfg=track_caller
+$ rm -r "/home/troy/Documents/low-level/rust/truerandomtest/target/debug/build/az-e04ac941987f2c0d/out/try_track_caller"

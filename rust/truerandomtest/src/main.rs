@@ -1,33 +1,67 @@
-use rand::Rng;
-use std::collections::HashMap;
+use clap::Parser;
+use std::time::Instant;
+#[derive(Parser, Debug)]
+#[command(
+    author = "Troy",
+    version = "0",
+    about = "Randomness tester",
+    long_about = None
+)]
+struct Args {
+    #[arg(default_value_t = 100)]
+    samplesize: u128,
 
-fn rbool() -> bool {
-    let mut random = rand::rng();
-    random.random_bool(0.5)
+    #[arg(short, long)]
+    debug: bool,
+}
+
+fn is_random(trues: u32, sample_size: u128) -> bool {
+    let 
+}
+
+fn calculations(sample_size: u128) -> (u32, u32, f64) {
+    let mut trues: u32 = 0;
+    let mut falses: u32 = 0;
+
+    for _ in 0..sample_size {
+        let myrandom: bool = true; //rng().random_bool(0.5);
+        if myrandom {
+            trues += 1;
+        } else {
+            falses += 1;
+        }
+    }
+
+    let difference: u32 = trues.max(falses) - trues.min(falses);
+    let randomness: f64 = ((difference as f64 / sample_size as f64) / 2.0) * 100.0;
+    (trues, falses, randomness)
 }
 
 fn main() {
-    let sample_size: u32 = 200;
-    let mut myhashmap = HashMap::new();
-
-    for i in 0..sample_size {
-        let myrandom: bool = rbool();
-        myhashmap.insert(i, myrandom);
+    let programstart: Instant = Instant::now();
+    let args = Args::parse();
+    if args.debug {
+        println!("Wassup, Debug!");
     }
 
-    let mut trues: i32 = 0;
-    let mut falses: i32 = 0;
+    let sample_size: u128 = args.samplesize;
 
-    for (_, value) in myhashmap {
-        if value {
-            trues += 1;
-            continue;
-        }
-        falses += 1;
+    if sample_size == 0 {
+        println!("Sample size must be more than 0, dummy!");
+        return;
     }
 
-    let difference: u32 = (i32::abs(trues - falses)) as u32;
-    let randomness: f64 = ((difference as f64 / sample_size as f64) / 2.0) * 100.0;
+    let calcstart: Instant = Instant::now();
+    let (trues, falses, observedrandomnessdeviation) = calculations(sample_size);
+
+    let calcdurationus: u128 = calcstart.elapsed().as_micros();
+    let totaldurationus: u128 = programstart.elapsed().as_micros();
+
+    let mspersample: f64 = calcdurationus as f64 / sample_size as f64;
+
+    println!(
+        "µs total = {totaldurationus} \nµs calc = {calcdurationus} µs ({mspersample}µs / sample)"
+    );
     println!("T => {trues}\nF => {falses}");
-    println!("{randomness}% imbalance in randomness given {sample_size} instances");
+    println!("random imbalance of {observedrandomnessdeviation}% given {sample_size} instances");
 }
